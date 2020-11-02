@@ -69,7 +69,6 @@ if __name__ == "__main__":
 class Drawer:
     def __init__(self, screen):
         self.screen = screen
-        self.alive = True
         self.figures = []
 
 

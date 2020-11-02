@@ -6,7 +6,6 @@ from solar_vis import *
 from solar_model import *
 from solar_input import *
 from solar_objects import *
-from threading import Thread
 import thorpy
 import time
 import numpy as np
@@ -47,9 +46,6 @@ def start_execution():
     """
     global perform_execution
     perform_execution = True
-    
-    # from record import start
-    # start(space, 100, __file__)
 
 def pause_execution():
     global perform_execution
