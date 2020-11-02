@@ -11,8 +11,6 @@ import thorpy
 import time
 import numpy as np
 
-browser = None
-
 timer = None
 
 alive = True
@@ -53,7 +51,6 @@ def start_execution():
     # from record import start
     # start(space, 100, __file__)
 
-
 def pause_execution():
     global perform_execution
     perform_execution = False
@@ -65,7 +62,6 @@ def stop_execution():
     global alive
     alive = False
 
-
 def open_file():
     """Открывает диалоговое окно выбора имени файла и вызывает
     функцию считывания параметров системы небесных тел из данного файла.
@@ -73,24 +69,13 @@ def open_file():
     """
     global space_objects
     global browser
-    if browser is None:
-        print("Error, broswer is not defined")
-    
+    global model_time
+
+    model_time = 0.0
     in_filename = "solar_system.txt"
-    #in_filename = browser.get_value()
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
-
-
-def save_file_dialog():
-    """Открывает диалоговое окно выбора имени файла и вызывает
-    функцию считывания параметров системы небесных тел из данного файла.
-    Считанные объекты сохраняются в глобальный список space_objects
-    """
-    out_filename = asksaveasfilename(filetypes=(("Text file", ".txt"),))
-    write_space_objects_data_to_file(out_filename, space_objects)
-
 
 def handle_events(events, menu):
     global alive
@@ -99,14 +84,12 @@ def handle_events(events, menu):
         if event.type == pg.QUIT:
             alive = False
 
-
 def slider_to_real(val):
     return np.exp(5 + val)
 
 def slider_reaction(event):
     global time_scale
     time_scale = slider_to_real(event.el.get_value())
-
 
 def init_ui(screen):
     global browser
@@ -117,8 +100,6 @@ def init_ui(screen):
     button_play = thorpy.make_button("Play", func=start_execution)
     timer = thorpy.OneLineText("Seconds passed")
 
-    browser = thorpy.Browser(path="./", file_types=(".txt"))
-    button_choose = thorpy.BrowserLauncher(browser=browser, const_text="Choose a file")
     button_load = thorpy.make_button(text="Load a file", func=open_file)
 
     box = thorpy.Box(elements=[
@@ -126,9 +107,8 @@ def init_ui(screen):
         button_pause, 
         button_stop, 
         button_play, 
-        timer,
         button_load,
-        button_choose])
+        timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
                                 reac_func=slider_reaction,
                                 event_args={"id":thorpy.constants.EVENT_SLIDE},
@@ -137,14 +117,13 @@ def init_ui(screen):
     box.add_reaction(reaction1)
     
     menu = thorpy.Menu(box)
-    thorpy.miscgui.application._CURRENT_MENU = menu
     for element in menu.get_population():
         element.surface = screen
 
     box.set_topleft((0,0))
     box.blit()
     box.update()
-    return menu, box, timer, browser
+    return menu, box, timer
 
 def main():
     """Главная функция главного модуля.
@@ -159,7 +138,6 @@ def main():
     global start_button
     global perform_execution
     global timer
-    global broswer
 
     print('Modelling started!')
     physical_time = 0
@@ -171,25 +149,8 @@ def main():
     screen = pg.display.set_mode((width, height))
     last_time = time.perf_counter()
     drawer = Drawer(screen)
-    menu, box, timer, broswer = init_ui(screen)
+    menu, box, timer = init_ui(screen)
     perform_execution = True
-    
-    sun = Star()
-    sun.m = 9000000
-    sun.x = 200
-    sun.y = 200
-    obj = DrawableObject(sun)
-    
-    space_objects.append(obj)
-
-    sun = Star()
-    sun.x = 200
-    sun.y = 400
-    sun.R = 20
-    sun.m = 100000
-    obj = DrawableObject(sun)
-    
-    space_objects.append(obj)
 
     while alive:
         handle_events(pg.event.get(), menu)
