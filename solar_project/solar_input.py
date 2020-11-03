@@ -4,13 +4,15 @@
 from solar_objects import Star, Planet
 from solar_vis import DrawableObject
 
-red = (255, 0, 0)
-blue = (0, 0, 255)
-green = (31, 168, 31)
-orange = (241, 178, 64)
-gray = (191, 191, 191)
-yellow = (255, 255, 0)
-white = (255, 255, 255)
+colors = {
+    'red': (255, 0, 0),
+    'blue': (0, 0, 255),
+    'green': (31, 168, 31),
+    'orange': (241, 178, 64),
+    'gray': (191, 191, 191),
+    'yellow': (255, 255, 0),
+    'white': (255, 255, 255),
+}
 
 
 def read_space_objects_data_from_file(input_filename):
@@ -67,7 +69,7 @@ def parse_star_parameters(line, star):
     assert tokens[0].lower() == 'star'
     assert len(tokens) == 8
     star.R = int(tokens[1])
-    star.color = tokens[2]
+    star.color = colors[tokens[2]]
     star.m = float(tokens[3])
     star.x = float(tokens[4])
     star.y = float(tokens[5])
@@ -97,7 +99,7 @@ def parse_planet_parameters(line, planet):
     assert tokens[0].lower() == 'planet'
     assert len(tokens) == 8
     planet.R = int(tokens[1])
-    planet.color = tokens[2]
+    planet.color = colors[tokens[2]]
     planet.m = float(tokens[3])
     planet.x = float(tokens[4])
     planet.y = float(tokens[5])
