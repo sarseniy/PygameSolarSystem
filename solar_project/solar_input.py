@@ -1,7 +1,7 @@
 # coding: utf-8
 # license: GPLv3
 
-from solar_objects import Star, Planet
+from solar_objects import Planet
 from solar_vis import DrawableObject
 
 colors = {
@@ -31,11 +31,7 @@ def read_space_objects_data_from_file(input_filename):
                 continue  # пустые строки и строки-комментарии пропускаем
 
             object_type = line.split()[0].lower()
-            if object_type == "star":
-                star = Star()
-                parse_star_parameters(line, star)
-                objects.append(star)
-            elif object_type == "planet":
+            if object_type == "planet" or object_type == 'star':
                 planet = Planet()
                 parse_planet_parameters(line, planet)
                 objects.append(planet)
@@ -43,38 +39,6 @@ def read_space_objects_data_from_file(input_filename):
                 print("Unknown space object")
 
     return [DrawableObject(obj) for obj in objects]
-
-
-def parse_star_parameters(line, star):
-    """Считывает данные о звезде из строки.
-
-    Входная строка должна иметь слеюущий формат:
-
-    Star <радиус в пикселах> <цвет> <масса> <x> <y> <Vx> <Vy>
-
-    Здесь (x, y) — координаты зведы, (Vx, Vy) — скорость.
-
-    Пример строки:
-
-    Star 10 red 1000 1 2 3 4
-
-    Параметры:
-
-    **line** — строка с описание звезды.
-
-    **star** — объект звезды.
-    """
-
-    tokens = line.split()
-    assert tokens[0].lower() == 'star'
-    assert len(tokens) == 8
-    star.R = int(tokens[1])
-    star.color = colors[tokens[2]]
-    star.m = float(tokens[3])
-    star.x = float(tokens[4])
-    star.y = float(tokens[5])
-    star.Vx = float(tokens[6])
-    star.Vy = float(tokens[7])
 
 
 def parse_planet_parameters(line, planet):
@@ -96,7 +60,6 @@ def parse_planet_parameters(line, planet):
     **planet** — объект планеты.
     """
     tokens = line.split()
-    assert tokens[0].lower() == 'planet'
     assert len(tokens) == 8
     planet.R = int(tokens[1])
     planet.color = colors[tokens[2]]
