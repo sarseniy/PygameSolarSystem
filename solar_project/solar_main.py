@@ -1,12 +1,18 @@
 # coding: utf-8
 # license: GPLv3
 
+import tkinter as tk
+from tkinter import filedialog
+
 from solar_vis import *
 from solar_model import *
 from solar_input import *
 import thorpy
 import time
 import numpy as np
+
+root = tk.Tk()
+root.withdraw()
 
 timer = None
 
@@ -60,7 +66,7 @@ def stop_execution():
     alive = False
 
 
-def open_file(in_filename="solar_system.txt"):
+def open_file():
     """Открывает диалоговое окно выбора имени файла и вызывает
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
@@ -69,7 +75,8 @@ def open_file(in_filename="solar_system.txt"):
     global model_time
 
     model_time = 0.0
-    space_objects = read_space_objects_data_from_file(in_filename)
+    file_dir = filedialog.askopenfilename(initialdir="*")
+    space_objects = read_space_objects_data_from_file(file_dir)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
 
@@ -103,9 +110,9 @@ def init_ui(screen):
 
     box = thorpy.Box(elements=[
         slider,
-        button_pause, 
-        button_stop, 
-        button_play, 
+        button_pause,
+        button_stop,
+        button_play,
         button_load,
         timer])
     reaction1 = thorpy.Reaction(reacts_to=thorpy.constants.THORPY_EVENT,
@@ -114,7 +121,7 @@ def init_ui(screen):
                                 params={},
                                 reac_name="slider reaction")
     box.add_reaction(reaction1)
-    
+
     menu = thorpy.Menu(box)
     for element in menu.get_population():
         element.surface = screen
@@ -129,7 +136,7 @@ def main():
     """Главная функция главного модуля.
     Создаёт объекты графического дизайна библиотеки tkinter: окно, холст, фрейм с кнопками, кнопки.
     """
-    
+
     global physical_time
     global displayed_time
     global time_step
@@ -143,7 +150,7 @@ def main():
     physical_time = 0
 
     pg.init()
-    
+
     width = 1400
     height = 800
     screen = pg.display.set_mode((width, height))
