@@ -152,6 +152,9 @@ def main():
     pg.init()
 
     output_file = 'output.txt'
+    out = open(output_file, 'w')
+    out.close()
+
     width = 1400
     height = 800
     screen = pg.display.set_mode((width, height))
@@ -171,7 +174,6 @@ def main():
         last_time = cur_time
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
-
 
         write_space_objects_data_to_file(output_file, space_objects)
 
