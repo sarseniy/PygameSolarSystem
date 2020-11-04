@@ -2,7 +2,6 @@
 # license: GPLv3
 
 from solar_objects import Planet
-from solar_vis import DrawableObject
 
 colors = {
     'red': (255, 0, 0),
@@ -39,7 +38,7 @@ def read_space_objects_data_from_file(input_filename):
             else:
                 print("Unknown space object")
 
-    return [DrawableObject(obj) for obj in objects]
+    return objects
 
 
 def parse_planet_parameters(line, planet):
@@ -62,6 +61,7 @@ def parse_planet_parameters(line, planet):
     """
     tokens = line.split()
     assert len(tokens) == 8
+    planet.type = tokens[0]
     planet.R = int(tokens[1])
     planet.color = colors[tokens[2]]
     planet.m = float(tokens[3])
@@ -86,10 +86,11 @@ def write_space_objects_data_to_file(output_filename, space_objects):
 
     **space_objects** — список объектов планет и звёзд
     """
-    with open(output_filename, 'w') as out_file:
+    '''with open(output_filename, 'a') as out_file:
         for obj in space_objects:
-            print(out_file, "%s %d %s %f" % ('1', 2, '3', 4.5))
-            # FIXME!
+            print(obj.type, obj.R, obj.color, obj.m, obj.x, obj.y, obj.Vx, obj.Vy, file=out_file)
+            # FIXME!'''
+    pass
 
 
 if __name__ == "__main__":

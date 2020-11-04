@@ -41,7 +41,7 @@ def execution(delta):
     """
     global model_time
     global displayed_time
-    recalculate_space_objects_positions([dr.obj for dr in space_objects], delta)
+    recalculate_space_objects_positions([dr for dr in space_objects], delta)
     model_time += delta
 
 
@@ -77,7 +77,7 @@ def open_file():
     model_time = 0.0
     file_dir = filedialog.askopenfilename(initialdir="*")
     space_objects = read_space_objects_data_from_file(file_dir)
-    max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
+    max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
 
 
@@ -151,6 +151,7 @@ def main():
 
     pg.init()
 
+    output_file = 'output.txt'
     width = 1400
     height = 800
     screen = pg.display.set_mode((width, height))
@@ -171,7 +172,7 @@ def main():
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
 
-        output_file = 'output.txt'
+
         write_space_objects_data_to_file(output_file, space_objects)
 
     print('Modelling finished!')
