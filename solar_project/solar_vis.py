@@ -12,7 +12,7 @@ from pygame.draw import *
 header_font = "Arial-16"
 """Шрифт в заголовке"""
 
-window_width = 800
+window_width = 1400
 """Ширина окна"""
 
 window_height = 800
@@ -29,7 +29,7 @@ scale_factor = 1
 def calculate_scale_factor(max_distance):
     """Вычисляет значение глобальной переменной **scale_factor** по данной характерной длине"""
     global scale_factor
-    scale_factor = 0.5*min(window_height, window_width)/max_distance
+    scale_factor = 0.5*min(window_height-70, window_width-70)/max_distance
     print('Scale factor:', scale_factor)
 
 
@@ -74,7 +74,7 @@ class Drawer:
     def update(self, figures, ui):
         self.screen.fill((0, 0, 0))
         for figure in figures:
-            figure.drawOn(self.screen)
+            figure.draw_on(self.screen)
         
         ui.blit()
         ui.update()
@@ -85,6 +85,6 @@ class DrawableObject:
     def __init__(self, obj):
         self.obj = obj
 
-    def drawOn(self, surface):
+    def draw_on(self, surface):
         object_ = self.obj
         circle(surface, object_.color, (scale_x(object_.x), scale_y(object_.y)), object_.R)

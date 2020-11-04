@@ -1,11 +1,9 @@
 # coding: utf-8
 # license: GPLv3
 
-import pygame as pg
 from solar_vis import *
 from solar_model import *
 from solar_input import *
-from solar_objects import *
 import thorpy
 import time
 import numpy as np
@@ -62,17 +60,15 @@ def stop_execution():
     alive = False
 
 
-def open_file():
+def open_file(in_filename="solar_system.txt"):
     """Открывает диалоговое окно выбора имени файла и вызывает
     функцию считывания параметров системы небесных тел из данного файла.
     Считанные объекты сохраняются в глобальный список space_objects
     """
     global space_objects
-    global browser
     global model_time
 
     model_time = 0.0
-    in_filename = "double_star.txt"
     space_objects = read_space_objects_data_from_file(in_filename)
     max_distance = max([max(abs(obj.obj.x), abs(obj.obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
@@ -96,8 +92,7 @@ def slider_reaction(event):
 
 
 def init_ui(screen):
-    global browser
-    slider = thorpy.SliderX(100, (-10, 10), "Simulation speed")
+    slider = thorpy.SliderX(100, (0, 10), "Simulation speed")
     slider.user_func = slider_reaction
     button_stop = thorpy.make_button("Quit", func=stop_execution)
     button_pause = thorpy.make_button("Pause", func=pause_execution)
@@ -149,8 +144,8 @@ def main():
 
     pg.init()
     
-    width = 1000
-    height = 900
+    width = 1400
+    height = 800
     screen = pg.display.set_mode((width, height))
     last_time = time.perf_counter()
     drawer = Drawer(screen)
