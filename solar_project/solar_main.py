@@ -171,6 +171,9 @@ def main():
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
 
+        output_file = 'output.txt'
+        write_space_objects_data_to_file(output_file, space_objects)
+
     print('Modelling finished!')
 
 
