@@ -7,6 +7,7 @@ from tkinter import filedialog
 from solar_vis import *
 from solar_model import *
 from solar_input import *
+from solar_graph import *
 import thorpy
 import time
 import numpy as np
@@ -159,6 +160,8 @@ def main():
     menu, box, timer = init_ui(screen)
     perform_execution = True
 
+    gr = Graph()
+
     while alive:
         handle_events(pg.event.get(), menu)
         cur_time = time.perf_counter()
@@ -171,9 +174,14 @@ def main():
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
 
+        gr.gain_data(space_objects, model_time)
+
+
         write_space_objects_data_to_file(output_file, space_objects, model_time)
 
     print('Modelling finished!')
+    pg.quit()
+    gr.show_plot()
 
 
 if __name__ == "__main__":
