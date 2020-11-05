@@ -40,7 +40,6 @@ def execution(delta):
     При perform_execution == True функция запрашивает вызов самой себя по таймеру через от 1 мс до 100 мс.
     """
     global model_time
-    global displayed_time
     recalculate_space_objects_positions([dr for dr in space_objects], delta)
     model_time += delta
 
@@ -74,9 +73,9 @@ def open_file():
     global space_objects
     global model_time
 
-    model_time = 0.0
     file_dir = filedialog.askopenfilename(initialdir="*")
     space_objects = read_space_objects_data_from_file(file_dir)
+    model_time = 0.0
     max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
     calculate_scale_factor(max_distance)
 
@@ -137,8 +136,6 @@ def main():
     Создаёт объекты графического дизайна библиотеки tkinter: окно, холст, фрейм с кнопками, кнопки.
     """
 
-    global physical_time
-    global displayed_time
     global time_step
     global time_speed
     global space
@@ -147,7 +144,6 @@ def main():
     global timer
 
     print('Modelling started!')
-    physical_time = 0
 
     pg.init()
 
@@ -175,7 +171,7 @@ def main():
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
 
-        write_space_objects_data_to_file(output_file, space_objects)
+        write_space_objects_data_to_file(output_file, space_objects, model_time)
 
     print('Modelling finished!')
 

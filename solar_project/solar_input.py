@@ -71,7 +71,7 @@ def parse_planet_parameters(line, planet):
     planet.Vy = float(tokens[7])
 
 
-def write_space_objects_data_to_file(output_filename, space_objects):
+def write_space_objects_data_to_file(output_filename, space_objects, time):
     """Сохраняет данные о космических объектах в файл.
 
     Строки должны иметь следующий формат:
@@ -88,7 +88,9 @@ def write_space_objects_data_to_file(output_filename, space_objects):
     """
     with open(output_filename, 'a') as out_file:
         for obj in space_objects:
-            print(obj.type, obj.R, get_key(obj.color, colors), obj.m, obj.x, obj.y, obj.Vx, obj.Vy, file=out_file)
+            if obj.type == 'Planet':
+                print(obj.type, obj.R, get_key(obj.color, colors), obj.m, obj.x, obj.y, "{:f}".format((obj.x**2 + obj.y**2)**0.5),
+                      time, file=out_file)
 
 
 def get_key(val, dictionary):
