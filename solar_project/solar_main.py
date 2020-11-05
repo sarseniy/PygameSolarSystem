@@ -99,7 +99,7 @@ def slider_reaction(event):
 
 
 def init_ui(screen):
-    slider = thorpy.SliderX(100, (0, 10), "Simulation speed")
+    slider = thorpy.SliderX(100, (5, 15), "Simulation speed")
     slider.user_func = slider_reaction
     button_stop = thorpy.make_button("Quit", func=stop_execution)
     button_pause = thorpy.make_button("Pause", func=pause_execution)
@@ -130,6 +130,21 @@ def init_ui(screen):
     box.blit()
     box.update()
     return menu, box, timer
+
+
+def check_graph_availability(objects):
+    stars = 0
+    planets = 0
+    for obj in objects:
+        if obj.type == 'Planet':
+            planets += 1
+        if obj.type == 'Star':
+            stars += 1
+    if stars == 1 and planets == 1:
+        return True
+    else:
+        return False
+
 
 
 def main():
@@ -163,6 +178,7 @@ def main():
     gr = Graph()
 
     while alive:
+        gr_drawing_flag = check_graph_availability(space_objects)
         handle_events(pg.event.get(), menu)
         cur_time = time.perf_counter()
         if perform_execution:
@@ -174,14 +190,16 @@ def main():
         drawer.update(space_objects, box)
         time.sleep(1.0 / 60)
 
-        gr.gain_data(space_objects, model_time)
-
+        if gr_drawing_flag:
+            gr.gain_data(space_objects, model_time)
 
         write_space_objects_data_to_file(output_file, space_objects, model_time)
 
     print('Modelling finished!')
     pg.quit()
-    gr.show_plot()
+
+    if gr_drawing_flag:
+        gr.show_plot()
 
 
 if __name__ == "__main__":
