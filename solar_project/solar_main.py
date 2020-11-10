@@ -11,6 +11,7 @@ from solar_graph import *
 import thorpy
 import time
 import numpy as np
+import os
 
 root = tk.Tk()
 root.withdraw()
@@ -74,7 +75,8 @@ def open_file():
     global space_objects
     global model_time
 
-    file_dir = filedialog.askopenfilename(initialdir="*")
+    file_dir = filedialog.askopenfilename(filetypes=[("TXT files", "*.txt")],
+                                          initialdir=os.path.split(os.path.realpath(__file__))[0])
     space_objects = read_space_objects_data_from_file(file_dir)
     model_time = 0.0
     max_distance = max([max(abs(obj.x), abs(obj.y)) for obj in space_objects])
@@ -188,7 +190,6 @@ def main():
 
         last_time = cur_time
         drawer.update(space_objects, box)
-        time.sleep(1.0 / 60)
 
         if gr_drawing_flag:
             gr.gain_data(space_objects, model_time)
